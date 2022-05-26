@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Elimination Method</title>
+    </head>
+    <body style="background-color: black; color: white; text-align: center;">
+        <div style="margin-top: 17%; font-size: large;">
+            <input value="Enter word here" type="text" id="word" width="75px" height="25px"\>
+            <input value="Press when done" type="button" onclick="answer.displayAnswer()" width="75px" height="25px"\><br>
+            <canvas width="25px" height="25px" onclick="colourDisplay.fill(0,(colourDisplay.array[0]+1)%3)" id="canvas0"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(1,(colourDisplay.array[1]+1)%3)" id="canvas1"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(2,(colourDisplay.array[2]+1)%3)" id="canvas2"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(3,(colourDisplay.array[3]+1)%3)" id="canvas3"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(4,(colourDisplay.array[4]+1)%3)" id="canvas4"></canvas>
+            <div onclick="alert('When you attempt a word in the NY Times Wordle, put the word in the text box and click on the color boxes below said box to indicate the color.');alert('After that, click on the button. It will give you a full list of possible answers.');alert('Repeat as necessary until you get the word right.')">How does this work?</div>
+        </div>
+        <script src="wordle_words.js"></script>
+        <script>
+            var colourDisplay = {
+                array: [0,0,0,0,0],
+                ctx: [
+                    document.getElementById("canvas0").getContext("2d"),
+                    document.getElementById("canvas1").getContext("2d"),
+                    document.getElementById("canvas2").getContext("2d"),
+                    document.getElementById("canvas3").getContext("2d"),
+                    document.getElementById("canvas4").getContext("2d")
+                ],
+                fill: function(index, colour) {
+                    if(colour == 0) colourDisplay.ctx[index].fillStyle = "grey";
+                    if(colour == 1) colourDisplay.ctx[index].fillStyle = "yellow";
+                    if(colour == 2) colourDisplay.ctx[index].fillStyle = "lawngreen";
+                    colourDisplay.ctx[index].fillRect(0,0,25,25);
+                    colourDisplay.array[index] = colour;
+                },
+                initialRender: function() {
+                    colourDisplay.fill(0,0);
+                    colourDisplay.fill(1,0);
+                    colourDisplay.fill(2,0);
+                    colourDisplay.fill(3,0);
+                    colourDisplay.fill(4,0);
+                    colourDisplay.array = [0,0,0,0,0];
+                }
+            };
+
+            var answer = {
+                remainingList: wordle.answers,
+                backup: wordle.answers,
+                information: null,
+                char: null,
+                displayAnswer: function() {
+                    answer.information = document.getElementById("word").value.toLowerCase();
+                    if(wordle.words.indexOf(answer.information) == -1) {
+                        alert("Enter a valid word");
+                        return;
+                    }
+                    for(var i = 0; i < 5; i++) {
+                        answer.char = answer.information.charAt(i);
+                        if(colourDisplay.array[i] == 0) answer.remainingList = answer.remainingList.filter(element => {
+                            return !element.includes(answer.char);
+                        });
+                        else if(colourDisplay.array[i] == 1) answer.remainingList = answer.remainingList.filter(element => {
+                            if(!element.includes(answer.char) || element.charAt(i) == answer.char) return false;
+                            else return true;
+                        });
+                        else if(colourDisplay.array[i] == 2) answer.remainingList = answer.remainingList.filter(element => {
+                            return element.charAt(i) == answer.char;
+                        });
+                        if(answer.remainingList.length == 0) {
+                            alert("No possible words left.");
+                            answer.remainingList = answer.backup;
+                            return;
+                        }
+                    }
+                    answer.backup = answer.remainingList;
+                    if(answer.remainingList.length == 1) alert("The only word left is " + answer.remainingList[0] + "!");
+                    else {
+                        alert("The remaining words are " + answer.remainingList);
+                        console.log(answer.remainingList);
+                    }
+                }
+            };
+
+            colourDisplay.initialRender();
+        </script>
+    </body>
+</html>
