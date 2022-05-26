@@ -8,7 +8,7 @@
             <input value="Enter word here" type="text" id="word" width="75px" height="25px"\>
             <input value="Press when done" type="button" onclick="answer.displayAnswer()" width="75px" height="25px"\><br>
             <canvas width="25px" height="25px" onclick="colourDisplay.fill(0,(colourDisplay.array[0]+1)%3)" id="canvas0"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(1,(colourDisplay.array[1]+1)%3)" id="canvas1"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(2,(colourDisplay.array[2]+1)%3)" id="canvas2"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(3,(colourDisplay.array[3]+1)%3)" id="canvas3"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(4,(colourDisplay.array[4]+1)%3)" id="canvas4"></canvas>
-            <div onclick="alert('When you attempt a word in the NY Times Wordle, put the word in the text box and click on the color boxes below said box to indicate the color.');alert('After that, click on the button. It will give you a full list of possible answers.');alert('Repeat as necessary until you get the word right.')">How does this work?</div>
+            <div onclick="alert('When you attempt a word in the NY Times Wordle, put the word in the text box and click on the color boxes below said box to indicate the color.');alert('After that, click on the button. It will give you a full list of possible answers.');alert('Repeat as necessary until you get the word right.');alert('If you want to restart, type Restart into the text box.');">How does this work?</div>
         </div>
         <script src="wordle_words.js"></script>
         <script>
@@ -44,6 +44,14 @@
                 char: null,
                 displayAnswer: function() {
                     answer.information = document.getElementById("word").value.toLowerCase();
+                    if(answer.information == "restart") {
+                        answer.remainingList = wordle.answers;
+                        answer.backup = wordle.answers;
+                        colourDisplay.initialRender();
+                        document.getElementById("word").value = "Enter word here";
+                        alert("Restarted");
+                        return;
+                    }
                     if(wordle.words.indexOf(answer.information) == -1) {
                         alert("Enter a valid word");
                         return;
@@ -61,19 +69,13 @@
                             return element.charAt(i) == answer.char;
                         });
                         if(answer.remainingList.length == 0) {
-                            alert("No possible words left.");
+                            alert("No possible words left. If your previous entry was a typo, type the correct answer now. Otherwise, restart by typing \"Restart\" into the text box.");
                             answer.remainingList = answer.backup;
                             return;
                         }
                     }
                     answer.backup = answer.remainingList;
-                    if(colourDisplay.array == [2,2,2,2,2]) {
-                        alert("Well done! You did it!");
-                        colourDisplay.initialRender();
-                        answer.remainingList = wordle.answers;
-                        answer.backup = wordle.answers;
-                    }
-                    else if(answer.remainingList.length == 1) alert("The only word left is " + answer.remainingList[0] + "!");
+                    if(answer.remainingList.length == 1) alert("The only word left is " + answer.remainingList[0] + "!");
                     else {
                         alert("The remaining words are " + answer.remainingList);
                         console.log(answer.remainingList);
