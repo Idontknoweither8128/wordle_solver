@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Elimination Method</title>
+        <title>NY Times Wordle Solver</title>
     </head>
     <body style="background-color: black; color: white; text-align: center;">
         <div style="margin-top: 17%; font-size: large;">
             <input value="Enter word here" type="text" id="word" width="75px" height="25px"\>
             <input value="Press when done" type="button" onclick="answer.displayAnswer()" width="75px" height="25px"\><br>
             <canvas width="25px" height="25px" onclick="colourDisplay.fill(0,(colourDisplay.array[0]+1)%3)" id="canvas0"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(1,(colourDisplay.array[1]+1)%3)" id="canvas1"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(2,(colourDisplay.array[2]+1)%3)" id="canvas2"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(3,(colourDisplay.array[3]+1)%3)" id="canvas3"></canvas><canvas width="25px" height="25px" onclick="colourDisplay.fill(4,(colourDisplay.array[4]+1)%3)" id="canvas4"></canvas>
-            <div onclick="alert('When you attempt a word in the NY Times Wordle, put the word in the text box and click on the color boxes below said box to indicate the color.');alert('After that, click on the button. It will give you a full list of possible answers.');alert('Repeat as necessary until you get the word right.');alert('If you want to restart, type Restart into the text box.');">How does this work?</div>
+            <div onclick="alert('When you attempt a word in the NY Times Wordle, put the word in the text box and click on the color boxes below said box to indicate the color.');alert('After that, click on the button or press \'Enter\'. It will give you a full list of possible answers, both as an alert and a message in console.');alert('Repeat as necessary until you get the word right.');alert('If you want to restart, type and enter \'Restart\' into the text box.');">How does this work?</div>
         </div>
         <script src="wordle_words.js"></script>
         <script>
@@ -84,6 +84,9 @@
             };
 
             colourDisplay.initialRender();
+            window.addEventListener("keypress", keyPressed => {
+                if(keyPressed.key.toLowerCase() == "enter") answer.displayAnswer();
+            });
         </script>
     </body>
 </html>
