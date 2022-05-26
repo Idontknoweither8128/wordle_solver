@@ -34,7 +34,6 @@
                     colourDisplay.fill(2,0);
                     colourDisplay.fill(3,0);
                     colourDisplay.fill(4,0);
-                    colourDisplay.array = [0,0,0,0,0];
                 }
             };
 
@@ -68,7 +67,13 @@
                         }
                     }
                     answer.backup = answer.remainingList;
-                    if(answer.remainingList.length == 1) alert("The only word left is " + answer.remainingList[0] + "!");
+                    if(colourDisplay.array == [2,2,2,2,2]) {
+                        alert("Well done! You did it!");
+                        colourDisplay.initialRender();
+                        answer.remainingList = wordle.answers;
+                        answer.backup = wordle.answers;
+                    }
+                    else if(answer.remainingList.length == 1) alert("The only word left is " + answer.remainingList[0] + "!");
                     else {
                         alert("The remaining words are " + answer.remainingList);
                         console.log(answer.remainingList);
